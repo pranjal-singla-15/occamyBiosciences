@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>Occamy | Sign Up</title>
+
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="signin.css">
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+<nav class="navbar">
+  <a href="../front_page/front_page.html" class="back-btn ripple-btn">← Back to Home</a>
+</nav>
+
+
+
+<!-- ================= SIGNUP SECTION ================= -->
+<section class="signup-page">
+
+  <div class="signup-box reveal">
+
+    <img src="../front_page/logo.png" class="signup-logo" alt="Occamy Logo">
+
+    <h2>Create Account</h2>
+    <p class="subtitle">Join the Field Operations Platform</p>
+
+
+    <form>
+
+      <input type="text" placeholder="Full Name" required>
+
+      <input type="email" placeholder="Email Address" required>
+
+
+      <!-- password with toggle -->
+      <div class="pass-wrapper">
+        <input type="password" id="pass" placeholder="Password" required>
+        <span onclick="togglePass('pass')">👁</span>
+      </div>
+
+      <div class="pass-wrapper">
+        <input type="password" id="cpass" placeholder="Confirm Password" required>
+        <span onclick="togglePass('cpass')">👁</span>
+      </div>
+
+
+      
+
+      <!-- terms -->
+      <label class="terms">
+        <input type="checkbox" required>
+        I agree to Terms & Privacy Policy
+      </label>
+
+
+      <button class="ripple-btn primary-btn">Create Account</button>
+
+    </form>
+
+
+    <div class="extras">
+      Already have an account?
+      <a href="../login/login.html">Login</a>
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- ================= SCRIPTS ================= -->
+<script>
+
+/* ripple effect */
+document.querySelectorAll(".ripple-btn").forEach(btn=>{
+  btn.addEventListener("click", function(e){
+    const circle=document.createElement("span");
+    circle.classList.add("ripple");
+    this.appendChild(circle);
+
+    const d=Math.max(this.clientWidth,this.clientHeight);
+    circle.style.width=circle.style.height=d+"px";
+    circle.style.left=e.offsetX-d/2+"px";
+    circle.style.top=e.offsetY-d/2+"px";
+
+    setTimeout(()=>circle.remove(),600);
+  });
+});
+
+
+/* show hide password */
+function togglePass(id){
+  const el=document.getElementById(id);
+  el.type = el.type === "password" ? "text" : "password";
+}
+
+
+/* reveal animation */
+const reveal = document.querySelector(".reveal");
+setTimeout(()=>reveal.classList.add("active"),200);
+
+</script>
+
+<script src="signin.js"></script>
+
+</body>
+</html>

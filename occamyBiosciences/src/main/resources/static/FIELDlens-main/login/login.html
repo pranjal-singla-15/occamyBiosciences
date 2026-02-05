@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Occamy | Login</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="login.css">
+</head>
+
+<body>
+
+<!-- ========= NAVBAR (same as homepage) ========= -->
+<nav class="navbar">
+  <a href="../front_page/front_page.html" class="back-btn">← Back to Home</a>
+</nav>
+
+
+<!-- ========= LOGIN SECTION ========= -->
+<section class="login-page">
+
+  <div class="login-box">
+
+    <img src="../front_page/logo.png" class="login-logo" alt="Occamy Logo">
+
+    <h2>Welcome Back</h2>
+    <p class="subtitle">Login to your Field Operations Portal</p>
+
+    <form>
+
+      <input type="email" placeholder="Email address" required>
+      <input type="password" placeholder="Password" required>
+
+      <button class="ripple-btn">Login</button>
+
+    </form>
+
+    <div class="extras">
+      <a href="#">Forgot password?</a>
+      <span>•</span>
+      <a href="../sign_in/sign_in.html">Create account</a>
+    </div>
+
+  </div>
+
+</section>
+
+
+<script>
+/* ripple effect */
+document.querySelectorAll(".ripple-btn").forEach(btn=>{
+  btn.addEventListener("click", function(e){
+    const circle=document.createElement("span");
+    circle.classList.add("ripple");
+    this.appendChild(circle);
+
+    const d=Math.max(this.clientWidth,this.clientHeight);
+    circle.style.width=circle.style.height=d+"px";
+    circle.style.left=e.offsetX-d/2+"px";
+    circle.style.top=e.offsetY-d/2+"px";
+
+    setTimeout(()=>circle.remove(),600);
+  });
+});
+</script>
+
+<script src="login.js"></script>
+
+</body>
+</html>

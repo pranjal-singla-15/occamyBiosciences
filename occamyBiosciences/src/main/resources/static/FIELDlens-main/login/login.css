@@ -1,0 +1,187 @@
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins',sans-serif;
+}
+
+/* ================= FULL BACKGROUND ================= */
+body{
+  height:100vh;
+  overflow:hidden;
+
+  background:
+    linear-gradient(rgba(3,25,45,.85), rgba(3,25,45,.9)),
+    url("../front_page/background.png");
+
+  background-size:cover;
+  background-position:center;
+  background-attachment:fixed;
+
+  color:white;
+}
+
+
+/* ================= NAVBAR ================= */
+.navbar{
+  position:fixed;
+  top:0;
+  width:100%;
+  padding:18px 6%;
+
+  background:rgba(0,0,0,.35);
+  backdrop-filter:blur(10px);
+}
+
+.back-btn{
+  color:#22e0c5;
+  text-decoration:none;
+  font-weight:500;
+  transition:.2s;
+}
+.back-btn:hover{
+  opacity:.7;
+}
+
+
+/* ================= CENTER PAGE ================= */
+.login-page{
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+
+/* ================= GLASS LOGIN BOX ================= */
+.login-box{
+  width:380px;
+  padding:45px 40px;
+
+  background:rgba(10,20,30,.65);
+  backdrop-filter:blur(14px);
+
+  border-radius:18px;
+
+  box-shadow:
+    0 20px 60px rgba(0,0,0,.6),
+    0 0 40px rgba(34,224,197,.15);
+
+  text-align:center;
+
+  animation:fadeUp .7s ease;
+}
+
+@keyframes fadeUp{
+  from{
+    opacity:0;
+    transform:translateY(40px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+
+/* ================= LOGO ================= */
+.login-logo{
+  width:160px;
+  margin-bottom:20px;
+}
+
+
+/* ================= TEXT ================= */
+.login-box h2{
+  font-size:24px;
+  margin-bottom:6px;
+}
+
+.subtitle{
+  font-size:14px;
+  opacity:.7;
+  margin-bottom:30px;
+}
+
+
+/* ================= INPUTS ================= */
+.login-box input{
+  width:100%;
+  padding:13px 15px;
+  margin-bottom:18px;
+
+  border:none;
+  border-radius:10px;
+
+  background:rgba(255,255,255,.08);
+  color:white;
+
+  outline:none;
+}
+
+.login-box input:focus{
+  border:1px solid #22e0c5;
+}
+
+
+/* ================= BUTTON ================= */
+.login-box button{
+  width:100%;
+  padding:13px;
+
+  border:none;
+  border-radius:25px;
+
+  background:#22e0c5;
+  color:#022;
+
+  font-weight:600;
+  cursor:pointer;
+
+  transition:.2s;
+  position:relative;
+  overflow:hidden;
+}
+
+.login-box button:hover{
+  transform:translateY(-2px);
+  background:#18c1a9;
+}
+
+.login-box button:active{
+  transform:scale(.96);
+}
+
+
+/* ================= LINKS ================= */
+.extras{
+  margin-top:18px;
+  font-size:13px;
+}
+
+.extras a{
+  color:#22e0c5;
+  text-decoration:none;
+}
+
+.extras span{
+  margin:0 6px;
+  opacity:.5;
+}
+
+
+/* ================= RIPPLE EFFECT ================= */
+.ripple{
+  position:absolute;
+  border-radius:50%;
+  background:rgba(255,255,255,.5);
+  transform:scale(0);
+  animation:rippleAnim .6s linear;
+}
+
+@keyframes rippleAnim{
+  to{
+    transform:scale(4);
+    opacity:0;
+  }
+}
