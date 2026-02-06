@@ -342,6 +342,51 @@
                 </div>
             </div>
 
+            <!-- Add Sales Section -->
+            <div class="card mt-4" id="addSalesSection" style="display: none;">
+                <div class="card-header">Add Sale / Order</div>
+                <div class="card-body">
+                    <form id="addSalesForm">
+                        <div class="mb-3">
+                            <label for="productSelect" class="form-label">Select Product *</label>
+                            <select class="form-select" id="productSelect" required style="background: rgba(8, 20, 36, 0.8); border: 1px solid rgba(255, 255, 255, 0.2); color: #e6f1ff;">
+                                <option value="">-- Select Product --</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="salesCountInput" class="form-label">Sales Count *</label>
+                            <input type="number" class="form-control" id="salesCountInput"
+                                   placeholder="Enter number of sales" required min="0"
+                                   style="background: rgba(8, 20, 36, 0.8); border: 1px solid rgba(255, 255, 255, 0.2); color: #e6f1ff;">
+                            <small class="text-muted">Enter the number of units sold</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="samplesCountInput" class="form-label">Samples Distributed</label>
+                            <input type="number" class="form-control" id="samplesCountInput"
+                                   placeholder="Enter number of samples" min="0" value="0"
+                                   style="background: rgba(8, 20, 36, 0.8); border: 1px solid rgba(255, 255, 255, 0.2); color: #e6f1ff;">
+                            <small class="text-muted">Enter the number of samples distributed (optional)</small>
+                        </div>
+
+                        <div id="salesFormMessage" class="mb-3"></div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn" style="background: linear-gradient(135deg, #2fffd5, #1fb89e); border: none; color: #020b16; font-weight: 600;">
+                                ✅ Submit Sale
+                            </button>
+                            <button type="reset" class="btn" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #e6f1ff;">
+                                🔄 Reset
+                            </button>
+                            <button type="button" class="btn" id="backToDashboard" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #e6f1ff;">
+                                ← Back to Dashboard
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
         </div>
     </div>
 

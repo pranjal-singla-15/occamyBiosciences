@@ -196,6 +196,27 @@ public class FieldOfficerController {
         }
     }
 
+    // Get all products
+    @GetMapping("/products")
+    public ResponseEntity<?> getAllProducts() {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String officerName = authentication.getName();
+            User user = fieldOfficerService.findByUserName(officerName);
+            if(user != null && user.getRole() == Role.USER) {
+                List<Product> products = fieldOfficerService.getAllProducts();
+                log.info("Retrieved {} products", products.size());
+                return ResponseEntity.ok(products);
+            }
+            else{
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+            }
+        } catch (RuntimeException e) {
+            log.error("Error retrieving products: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
+        }
+    }
+
     // Record product sales and samples for a specific field officer
     @PostMapping("/products/{productId}/record-sales")
     public ResponseEntity<?> recordProductSalesAndSamples(

@@ -3,6 +3,7 @@ package com.occamy.occamyBiosciences.controller;
 import com.occamy.occamyBiosciences.dto.OfficerMeetingsSalesDTO;
 import com.occamy.occamyBiosciences.dto.ProductSalesVsSamplesDTO;
 import com.occamy.occamyBiosciences.entity.Meeting;
+import com.occamy.occamyBiosciences.entity.Product;
 import com.occamy.occamyBiosciences.entity.Task;
 import com.occamy.occamyBiosciences.entity.User;
 import com.occamy.occamyBiosciences.enums.MeetingType;
@@ -264,6 +265,48 @@ public class AdminController {
 
         } catch (RuntimeException e) {
             log.error("Error assigning meeting: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    // Create a new product
+    @PostMapping("/products")
+    public ResponseEntity<?> createProduct(@RequestParam String name) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String adminName = authentication.getName();
+            User user = adminService.findByUserName(adminName);
+            if(user != null && user.getRole() == Role.ADMIN) {
+                Product product = adminService.createProduct(name);
+                log.info("Admin created product: {}", name);
+                return ResponseEntity.status(HttpStatus.CREATED).body(product);
+            }
+            else{
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+            }
+        } catch (RuntimeException e) {
+            log.error("Error creating product: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    // Get all products
+    @GetMapping("/products")
+    public ResponseEntity<?> getAllProducts() {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String adminName = authentication.getName();
+            User user = adminService.findByUserName(adminName);
+            if(user != null && user.getRole() == Role.ADMIN) {
+                List<Product> products = adminService.getAllProducts();
+                log.info("Admin retrieved {} products", products.size());
+                return ResponseEntity.ok(products);
+            }
+            else{
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+            }
+        } catch (RuntimeException e) {
+            log.error("Error retrieving products: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
         }
     }

@@ -364,4 +364,18 @@ public class AdminService {
 
         return meetingRepository.save(meeting);
     }
+
+    // Create a new product
+    public Product createProduct(String name) {
+        Product product = new Product();
+        product.setName(name);
+        product.setSales(0);
+        product.setSamples(0);
+        return productRepository.save(product);
+    }
+
+    // Get all products
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
+    }
 }
