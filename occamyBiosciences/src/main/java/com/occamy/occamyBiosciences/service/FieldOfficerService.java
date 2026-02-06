@@ -44,6 +44,10 @@ public class FieldOfficerService {
                 .orElseThrow(() -> new RuntimeException("User not found with username: " + userName));
     }
 
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
+    }
+
     public Meeting createMeeting(Meeting meeting){
         meetingRepository.save(meeting);
         return meeting;

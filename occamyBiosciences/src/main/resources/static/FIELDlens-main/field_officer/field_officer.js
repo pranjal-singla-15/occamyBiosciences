@@ -156,6 +156,24 @@ function setupEventListeners() {
             loadTasksByStatus(userId, 'COMPLETED');
         });
     }
+
+    // Sales form event listeners
+    const addSalesForm = document.getElementById('addSalesForm');
+    if (addSalesForm) {
+        addSalesForm.addEventListener('submit', submitSalesForm);
+    }
+
+    const backToDashboard = document.getElementById('backToDashboard');
+    if (backToDashboard) {
+        backToDashboard.addEventListener('click', () => {
+            handleSectionNavigation('dashboard');
+            // Update sidebar active state
+            const sidebarLinks = document.querySelectorAll('.sidebar a');
+            sidebarLinks.forEach(l => l.classList.remove('active'));
+            const dashboardLink = document.querySelector('.sidebar a[data-section="dashboard"]');
+            if (dashboardLink) dashboardLink.classList.add('active');
+        });
+    }
 }
 
 // Start day (start attendance)
@@ -336,9 +354,109 @@ function distributeSample() {
     alert('Sample distribution feature - To be implemented with product selection UI');
 }
 
-// Add sale
+// Add sale - show the sales form
 function addSale() {
-    alert('Add sale feature - To be implemented with product and amount selection UI');
+    handleSectionNavigation('add-sale');
+}
+
+// Load all products into the dropdown
+async function loadProducts() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/field-officer/products`, {
+            method: 'GET',
+            headers: getAuthHeaders()
+        });
+
+        if (response.ok) {
+            const products = await response.json();
+            populateProductDropdown(products);
+        } else {
+            console.error('Failed to load products');
+            showSalesMessage('Failed to load products', 'danger');
+        }
+    } catch (error) {
+        console.error('Error loading products:', error);
+        showSalesMessage('An error occurred while loading products', 'danger');
+    }
+}
+
+// Populate the product dropdown
+function populateProductDropdown(products) {
+    const productSelect = document.getElementById('productSelect');
+    if (!productSelect) return;
+
+    productSelect.innerHTML = '<option value="">-- Select Product --</option>';
+
+    products.forEach(product => {
+        const option = document.createElement('option');
+        option.value = product.id;
+        option.textContent = `${product.name} (Sales: ${product.sales}, Samples: ${product.samples})`;
+        productSelect.appendChild(option);
+    });
+}
+
+// Submit sales form
+async function submitSalesForm(e) {
+    e.preventDefault();
+
+    const userId = sessionStorage.getItem('userId') || 1;
+    const productId = document.getElementById('productSelect').value;
+    const salesCount = parseInt(document.getElementById('salesCountInput').value) || 0;
+    const samplesCount = parseInt(document.getElementById('samplesCountInput').value) || 0;
+
+    if (!productId) {
+        showSalesMessage('Please select a product', 'danger');
+        return;
+    }
+
+    if (salesCount === 0 && samplesCount === 0) {
+        showSalesMessage('Please enter at least one sale or sample', 'danger');
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            `${API_BASE_URL}/field-officer/products/${productId}/record-sales?officerId=${userId}&salesCount=${salesCount}&samplesCount=${samplesCount}`,
+            {
+                method: 'POST',
+                headers: getAuthHeaders()
+            }
+        );
+
+        if (response.ok) {
+            const record = await response.json();
+            showSalesMessage('Sale recorded successfully!', 'success');
+
+            // Reset form after 2 seconds
+            setTimeout(() => {
+                document.getElementById('addSalesForm').reset();
+                showSalesMessage('', '');
+            }, 2000);
+
+            // Reload dashboard data
+            loadDashboardData();
+        } else {
+            const error = await response.json();
+            showSalesMessage(`Error: ${error.error || 'Failed to record sale'}`, 'danger');
+        }
+    } catch (error) {
+        console.error('Error recording sale:', error);
+        showSalesMessage('An error occurred while recording the sale', 'danger');
+    }
+}
+
+// Show message in sales form
+function showSalesMessage(message, type) {
+    const messageDiv = document.getElementById('salesFormMessage');
+    if (!messageDiv) return;
+
+    if (!message) {
+        messageDiv.innerHTML = '';
+        return;
+    }
+
+    const alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+    messageDiv.innerHTML = `<div class="alert ${alertClass}" style="background: rgba(${type === 'success' ? '76, 175, 80' : '255, 82, 82'}, 0.1); border: 1px solid rgba(${type === 'success' ? '76, 175, 80' : '255, 82, 82'}, 0.3); color: ${type === 'success' ? '#4caf50' : '#ff5252'};">${message}</div>`;
 }
 
 // Handle section navigation
@@ -346,22 +464,27 @@ function handleSectionNavigation(section) {
     const userId = sessionStorage.getItem('userId') || 1;
 
     // Hide/show sections
-    const dashboardContent = document.querySelector('.content > *:not(#tasksSection)');
     const tasksSection = document.getElementById('tasksSection');
+    const addSalesSection = document.getElementById('addSalesSection');
+    const dashboardElements = document.querySelectorAll('.content > *:not(#tasksSection):not(#addSalesSection)');
 
     if (section === 'tasks') {
-        // Show tasks section, hide dashboard
+        // Show tasks section, hide others
         if (tasksSection) tasksSection.style.display = 'block';
-        document.querySelectorAll('.content > *:not(#tasksSection)').forEach(el => {
-            el.style.display = 'none';
-        });
+        if (addSalesSection) addSalesSection.style.display = 'none';
+        dashboardElements.forEach(el => el.style.display = 'none');
         loadTasks(userId);
-    } else if (section === 'dashboard') {
-        // Show dashboard, hide tasks
+    } else if (section === 'add-sale') {
+        // Show sales form, hide others
         if (tasksSection) tasksSection.style.display = 'none';
-        document.querySelectorAll('.content > *:not(#tasksSection)').forEach(el => {
-            el.style.display = '';
-        });
+        if (addSalesSection) addSalesSection.style.display = 'block';
+        dashboardElements.forEach(el => el.style.display = 'none');
+        loadProducts();
+    } else if (section === 'dashboard') {
+        // Show dashboard, hide others
+        if (tasksSection) tasksSection.style.display = 'none';
+        if (addSalesSection) addSalesSection.style.display = 'none';
+        dashboardElements.forEach(el => el.style.display = '');
     } else if (section === 'start-day') {
         startDay();
     } else if (section === 'log-meeting') {
@@ -370,8 +493,6 @@ function handleSectionNavigation(section) {
         addGroupMeeting();
     } else if (section === 'distribute-sample') {
         distributeSample();
-    } else if (section === 'add-sale') {
-        addSale();
     }
 }
 
